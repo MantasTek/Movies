@@ -1,5 +1,5 @@
+import './style.css';
 import { Movie } from './models/movie.js';
-
 
 const container = document.querySelector('.container');
 const seats = document.querySelectorAll('.row .seat:not(.occupied)');
@@ -9,7 +9,6 @@ const movieSelect = document.getElementById('movie');
 
 let ticketPrice = 0;
 let movies = [];
-
 
 async function fetchMovies() {
     try {
@@ -22,7 +21,6 @@ async function fetchMovies() {
     }
 }
 
-
 function populateMovieSelect() {
     movieSelect.innerHTML = '';
     movies.forEach(movie => {
@@ -32,13 +30,11 @@ function populateMovieSelect() {
         movieSelect.appendChild(option);
     });
     
-    
     if (movies.length > 0) {
         ticketPrice = movies[0].price;
         updateSelectedCount();
     }
 }
-
 
 function updateSelectedCount() {
     const selectedSeats = document.querySelectorAll('.row .seat.selected');
@@ -58,6 +54,5 @@ container.addEventListener('click', e => {
         updateSelectedCount();
     }
 });
-
 
 document.addEventListener('DOMContentLoaded', fetchMovies);
