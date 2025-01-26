@@ -1,0 +1,21 @@
+{
+    "movies": [
+      {
+        "Title": "The Apprentice",
+        "Price": 50
+      },
+      {
+        "Title": "Sonic 3",
+        "Price": 100
+      },
+      {
+        "Title": "Better Man",
+        "Price": 70
+      },
+      {
+        "Title": "Nosferatu",
+        "Price": 90
+      }
+    ],
+    "bookings": []
+  }
