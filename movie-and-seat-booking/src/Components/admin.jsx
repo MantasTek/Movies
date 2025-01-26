@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { MovieForm } from './components/MovieForm';
+import { MovieForm } from './MovieForm';
 import { movieService } from '../services/movieService';
 import '../styles/Admin.css';
 
@@ -118,7 +118,7 @@ MovieForm.propTypes = {
     Price: PropTypes.number,
     Year: PropTypes.string,
     Poster: PropTypes.string
-  }).isRequired,
+  }),
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired
 };
