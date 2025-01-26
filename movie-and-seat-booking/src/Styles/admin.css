@@ -1,0 +1,85 @@
+.admin-panel {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  color: white;
+}
+
+.add-movie-btn {
+  background: #6feaf6;
+  color: #242333;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 2rem;
+}
+
+.movies-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.movie-item {
+  background: #242333;
+  border: 1px solid #6feaf6;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.movie-info {
+  margin-bottom: 1rem;
+}
+
+.movie-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.movie-actions button {
+  background: transparent;
+  border: 1px solid #6feaf6;
+  color: #6feaf6;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.movie-actions button:hover {
+  background: #6feaf6;
+  color: #242333;
+}
+
+.movie-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.movie-form {
+  background: #242333;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.error-message {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff6b6b;
+  color: #ff6b6b;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  text-align: center;
+}

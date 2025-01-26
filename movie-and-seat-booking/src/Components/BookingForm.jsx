@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,21 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
       newErrors.phone = 'Please enter a valid 10-digit phone number';
     }
     return newErrors;
+  };
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+    // Clear error when user starts typing again
+    if (errors[id]) {
+      setErrors(prev => ({
+        ...prev,
+        [id]: ''
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -40,14 +56,14 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
           }),
         });
 
-        if (response.ok) {
-          alert('Booking successful!');
-          onClose();
-        } else {
+        if (!response.ok) {
           throw new Error('Booking failed');
         }
-      } catch (error) {
-        console.error('Error making booking:', error);
+
+        alert('Booking successful!');
+        onClose();
+      } catch (err) {
+        console.error('Error making booking:', err);
         alert('Failed to make booking. Please try again.');
       }
     } else {
@@ -66,9 +82,15 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
               type="text"
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              onChange={handleInputChange}
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? "name-error" : undefined}
             />
-            {errors.name && <span className="error">{errors.name}</span>}
+            {errors.name && (
+              <span className="error" id="name-error" role="alert">
+                {errors.name}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
@@ -77,9 +99,15 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
               type="tel"
               id="phone"
               value={formData.phone}
-              onChange={(e) => setFormData({...formData, phone: e.target.value})}
+              onChange={handleInputChange}
+              aria-invalid={!!errors.phone}
+              aria-describedby={errors.phone ? "phone-error" : undefined}
             />
-            {errors.phone && <span className="error">{errors.phone}</span>}
+            {errors.phone && (
+              <span className="error" id="phone-error" role="alert">
+                {errors.phone}
+              </span>
+            )}
           </div>
 
           <div className="booking-summary">
@@ -96,4 +124,13 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
       </div>
     </div>
   );
+};
+
+BookingForm.propTypes = {
+  movie: PropTypes.shape({
+    Title: PropTypes.string.isRequired,
+  }).isRequired,
+  selectedSeats: PropTypes.arrayOf(PropTypes.number).isRequired,
+  totalPrice: PropTypes.number.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
