@@ -1,21 +1,43 @@
 {
-    "movies": [
-      {
-        "Title": "The Apprentice",
-        "Price": 50
-      },
-      {
-        "Title": "Sonic 3",
-        "Price": 100
-      },
-      {
-        "Title": "Better Man",
-        "Price": 70
-      },
-      {
-        "Title": "Nosferatu",
-        "Price": 90
-      }
-    ],
-    "bookings": []
-  }
+  "movies": [
+    {
+      "id": 1,
+      "Title": "The Apprentice",
+      "Price": 50,
+      "Year": "2024",
+      "Poster": "https://example.com/apprentice-poster.jpg"
+    },
+    {
+      "id": 2,
+      "Title": "Sonic 3",
+      "Price": 100,
+      "Year": "2024",
+      "Poster": "https://example.com/sonic3-poster.jpg"
+    },
+    {
+      "id": 3,
+      "Title": "Better Man",
+      "Price": 70,
+      "Year": "2024",
+      "Poster": "https://example.com/betterman-poster.jpg"
+    },
+    {
+      "id": 4,
+      "Title": "Nosferatu",
+      "Price": 90,
+      "Year": "2024",
+      "Poster": "https://example.com/nosferatu-poster.jpg"
+    }
+  ],
+  "bookings": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "phone": "1234567890",
+      "movieTitle": "The Apprentice",
+      "seats": [1, 2],
+      "price": 100,
+      "bookingDate": "2024-01-26T12:00:00.000Z"
+    }
+  ]
+}
