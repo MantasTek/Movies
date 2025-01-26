@@ -13,49 +13,43 @@ export const SeatGrid = ({ selectedSeats, onSeatClick }) => {
     return (
       <div
         key={`seat-${index}`}
-        className={`seat ${isOccupied ? 'occupied' : ''} ${isSelected ? 'selected' : ''}`}
+        className={`seat${isSelected ? ' selected' : ''}${isOccupied ? ' occupied' : ''}`}
         onClick={() => !isOccupied && onSeatClick(index)}
         role="button"
         tabIndex={isOccupied ? -1 : 0}
         aria-label={`Seat ${index + 1} ${isOccupied ? 'occupied' : isSelected ? 'selected' : 'available'}`}
-        aria-disabled={isOccupied}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            !isOccupied && onSeatClick(index);
-          }
-        }}
       />
     );
   };
 
-  const renderRow = (rowIndex) => (
-    <div key={`row-${rowIndex}`} className="row" role="group" aria-label={`Row ${rowIndex + 1}`}>
-      {Array(SEATS_PER_ROW).fill(null).map((_, seatIndex) => renderSeat(rowIndex, seatIndex))}
-    </div>
-  );
-
   return (
-    <>
-      <ul className="showcase" aria-label="Seat types">
+    <div className="seat-grid">
+      <ul className="showcase">
         <li>
-          <div className="seat" role="img" aria-label="Available seat example" />
+          <div className="seat" />
           <small>N/A</small>
         </li>
         <li>
-          <div className="seat selected" role="img" aria-label="Selected seat example" />
+          <div className="seat selected" />
           <small>Selected</small>
         </li>
         <li>
-          <div className="seat occupied" role="img" aria-label="Occupied seat example" />
+          <div className="seat occupied" />
           <small>Occupied</small>
         </li>
       </ul>
 
       <div className="container">
-        <div className="screen" role="img" aria-label="Screen" />
-        {Array(ROWS).fill(null).map((_, rowIndex) => renderRow(rowIndex))}
+        <div className="screen" />
+        {Array(ROWS).fill(null).map((_, rowIndex) => (
+          <div key={`row-${rowIndex}`} className="row">
+            {Array(SEATS_PER_ROW).fill(null).map((_, seatIndex) => 
+              renderSeat(rowIndex, seatIndex)
+            )}
+          </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 };
 

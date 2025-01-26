@@ -7,6 +7,7 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
     phone: '',
   });
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -21,53 +22,60 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
     return newErrors;
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newErrors = validateForm();
+    
+    if (Object.keys(newErrors).length === 0) {
+      setIsSubmitting(true);
+      try {
+        const bookingData = {
+          name: formData.name.trim(),
+          phone: formData.phone.trim(),
+          movieTitle: movie.Title,
+          seats: selectedSeats,
+          price: totalPrice,
+          bookingDate: new Date().toISOString()
+        };
+
+        const response = await fetch('http://localhost:3000/bookings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bookingData),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save booking');
+        }
+
+        // Successfully booked
+        alert('Booking successful! Thank you for your purchase.');
+        onClose();
+      } catch (error) {
+        console.error('Error making booking:', error);
+        alert('Failed to make booking. Please try again.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      setErrors(newErrors);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [id]: value
     }));
-    // Clear error when user starts typing again
+    // Clear error when user starts typing
     if (errors[id]) {
       setErrors(prev => ({
         ...prev,
         [id]: ''
       }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newErrors = validateForm();
-    
-    if (Object.keys(newErrors).length === 0) {
-      try {
-        const response = await fetch('http://localhost:3000/bookings', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ...formData,
-            movieTitle: movie.Title,
-            seats: selectedSeats,
-            price: totalPrice,
-            bookingDate: new Date().toISOString()
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Booking failed');
-        }
-
-        alert('Booking successful!');
-        onClose();
-      } catch (err) {
-        console.error('Error making booking:', err);
-        alert('Failed to make booking. Please try again.');
-      }
-    } else {
-      setErrors(newErrors);
     }
   };
 
@@ -83,14 +91,9 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
               id="name"
               value={formData.name}
               onChange={handleInputChange}
-              aria-invalid={!!errors.name}
-              aria-describedby={errors.name ? "name-error" : undefined}
+              disabled={isSubmitting}
             />
-            {errors.name && (
-              <span className="error" id="name-error" role="alert">
-                {errors.name}
-              </span>
-            )}
+            {errors.name && <span className="error">{errors.name}</span>}
           </div>
 
           <div className="form-group">
@@ -100,25 +103,24 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
               id="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              aria-invalid={!!errors.phone}
-              aria-describedby={errors.phone ? "phone-error" : undefined}
+              disabled={isSubmitting}
             />
-            {errors.phone && (
-              <span className="error" id="phone-error" role="alert">
-                {errors.phone}
-              </span>
-            )}
+            {errors.phone && <span className="error">{errors.phone}</span>}
           </div>
 
           <div className="booking-summary">
             <p>Movie: {movie.Title}</p>
-            <p>Seats: {selectedSeats.length}</p>
+            <p>Seats: {selectedSeats.join(', ')}</p>
             <p>Total Price: {totalPrice} kr</p>
           </div>
 
           <div className="form-actions">
-            <button type="submit">Confirm Booking</button>
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Processing...' : 'Confirm Booking'}
+            </button>
+            <button type="button" onClick={onClose} disabled={isSubmitting}>
+              Cancel
+            </button>
           </div>
         </form>
       </div>
