@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BookingForm } from './BookingForm';
-import { SeatGrid } from './components/seatGrid';
+import { SeatGrid } from './components/SeatGrid';
 import { movieService } from '../services/movieService';
 import '../styles/MovieBooking.css';
 
