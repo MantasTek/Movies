@@ -30,11 +30,15 @@ export const MovieBooking = () => {
   }, []);
 
   const handleSeatClick = (seatIndex) => {
-    setSelectedSeats(prevSeats => 
-      prevSeats.includes(seatIndex)
-        ? prevSeats.filter(seat => seat !== seatIndex)
-        : [...prevSeats, seatIndex]
-    );
+    const isSeatSelected = selectedSeats.includes(seatIndex);
+    
+    if (isSeatSelected) {
+      setSelectedSeats(selectedSeats.filter(seat => seat !== seatIndex));
+    } else {
+      setSelectedSeats([...selectedSeats, seatIndex]);
+    }
+    
+    console.log('Selected seats:', selectedSeats);
   };
 
   const handleMovieChange = (event) => {
