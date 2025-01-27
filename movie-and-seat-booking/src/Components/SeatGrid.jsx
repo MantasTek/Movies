@@ -6,7 +6,8 @@ export const SeatGrid = ({ selectedSeats, onSeatClick }) => {
   const occupiedSeats = [3, 4, 14, 15, 22, 23, 34, 35, 44, 45, 46];
 
   const renderSeat = (rowIndex, seatIndex) => {
-    const index = rowIndex * SEATS_PER_ROW + seatIndex;
+    const index = rowIndex * SEATS_PER_ROW + seatIndex +1;
+    console.log('index:', index);
     const isOccupied = occupiedSeats.includes(index);
     const isSelected = selectedSeats.includes(index);
 
