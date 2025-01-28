@@ -5,8 +5,7 @@ export const MovieForm = ({ movie, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
     Title: '',
     Price: '',
-    Year: '',
-    Poster: ''
+    Year: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -15,8 +14,7 @@ export const MovieForm = ({ movie, onSave, onCancel }) => {
       setFormData({
         Title: movie.Title || '',
         Price: movie.Price || '',
-        Year: movie.Year || '',
-        Poster: movie.Poster || ''
+        Year: movie.Year || ''
       });
     }
   }, [movie]);
@@ -44,35 +42,7 @@ export const MovieForm = ({ movie, onSave, onCancel }) => {
       }
     }
 
-    if (formData.Poster && !isValidUrl(formData.Poster)) {
-      newErrors.Poster = 'Please enter a valid URL';
-    }
-
     return newErrors;
-  };
-
-  const isValidUrl = (urlString) => {
-    try {
-      new URL(urlString);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[id]) {
-      setErrors(prev => ({
-        ...prev,
-        [id]: ''
-      }));
-    }
   };
 
   const handleSubmit = (e) => {
@@ -87,6 +57,20 @@ export const MovieForm = ({ movie, onSave, onCancel }) => {
       });
     } else {
       setErrors(validationErrors);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+    if (errors[id]) {
+      setErrors(prev => ({
+        ...prev,
+        [id]: ''
+      }));
     }
   };
 
@@ -150,23 +134,6 @@ export const MovieForm = ({ movie, onSave, onCancel }) => {
             )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="Poster">Poster URL:</label>
-            <input
-              id="Poster"
-              type="url"
-              value={formData.Poster}
-              onChange={handleInputChange}
-              aria-invalid={!!errors.Poster}
-              aria-describedby={errors.Poster ? "poster-error" : undefined}
-            />
-            {errors.Poster && (
-              <span className="error" id="poster-error" role="alert">
-                {errors.Poster}
-              </span>
-            )}
-          </div>
-
           <div className="form-actions">
             <button type="submit">Save</button>
             <button type="button" onClick={onCancel}>Cancel</button>
@@ -182,8 +149,7 @@ MovieForm.propTypes = {
     id: PropTypes.number,
     Title: PropTypes.string,
     Price: PropTypes.number,
-    Year: PropTypes.string,
-    Poster: PropTypes.string
+    Year: PropTypes.string
   }).isRequired,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired

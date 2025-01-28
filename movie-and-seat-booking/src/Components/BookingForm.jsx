@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { movieService } from '../services/movieService';
 
-export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
+export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose, onBookingComplete }) => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -33,26 +34,14 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
           name: formData.name.trim(),
           phone: formData.phone.trim(),
           movieTitle: movie.Title,
-          seats: selectedSeats,
+          seats: selectedSeats.map(seat => seat + 1),
           price: totalPrice,
           bookingDate: new Date().toISOString()
         };
 
-        const response = await fetch('http://localhost:3000/bookings', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(bookingData),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to save booking');
-        }
-
-        // Successfully booked
+        await movieService.createBooking(bookingData);
         alert('Booking successful! Thank you for your purchase.');
-        onClose();
+        onBookingComplete();
       } catch (error) {
         console.error('Error making booking:', error);
         alert('Failed to make booking. Please try again.');
@@ -70,7 +59,6 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
       ...prev,
       [id]: value
     }));
-    // Clear error when user starts typing
     if (errors[id]) {
       setErrors(prev => ({
         ...prev,
@@ -110,7 +98,7 @@ export const BookingForm = ({ movie, selectedSeats, totalPrice, onClose }) => {
 
           <div className="booking-summary">
             <p>Movie: {movie.Title}</p>
-            <p>Seats: {selectedSeats.join(', ')}</p>
+            <p>Seats: {selectedSeats.map(seat => seat + 1).join(', ')}</p>
             <p>Total Price: {totalPrice} kr</p>
           </div>
 
@@ -135,4 +123,5 @@ BookingForm.propTypes = {
   selectedSeats: PropTypes.arrayOf(PropTypes.number).isRequired,
   totalPrice: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
+  onBookingComplete: PropTypes.func.isRequired
 };

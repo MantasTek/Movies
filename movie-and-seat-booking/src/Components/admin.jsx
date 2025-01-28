@@ -113,7 +113,6 @@ export const Admin = () => {
 
 MovieForm.propTypes = {
   movie: PropTypes.shape({
-    id: PropTypes.number,
     Title: PropTypes.string,
     Price: PropTypes.number,
     Year: PropTypes.string,
