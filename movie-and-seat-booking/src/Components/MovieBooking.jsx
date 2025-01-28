@@ -8,42 +8,59 @@ export const MovieBooking = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [bookedSeats, setBookedSeats] = useState([]);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchMovies = async () => {
+  const fetchBookedSeats = async (movieTitle) => {
     try {
-      const data = await movieService.getMovies();
-      setMovies(data);
-      setSelectedMovie(data[0]);
+      const seats = await movieService.getBookedSeats(movieTitle);
+      setBookedSeats(seats);
     } catch (err) {
-      setError('Error loading movies. Please try again.');
-      console.error('Error fetching movies:', err);
-    } finally {
-      setIsLoading(false);
+      console.error('Error fetching booked seats:', err);
     }
   };
 
   useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const data = await movieService.getMovies();
+        setMovies(data);
+        if (data.length > 0) {
+          setSelectedMovie(data[0]);
+          await fetchBookedSeats(data[0].Title);
+        }
+      } catch (err) {
+        setError('Error loading movies. Please try again.');
+        console.error('Error fetching movies:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchMovies();
   }, []);
 
   const handleSeatClick = (seatIndex) => {
-    const isSeatSelected = selectedSeats.includes(seatIndex);
-    
-    if (isSeatSelected) {
-      setSelectedSeats(selectedSeats.filter(seat => seat !== seatIndex));
-    } else {
-      setSelectedSeats([...selectedSeats, seatIndex]);
-    }
-    
-    console.log('Selected seats:', selectedSeats);
+    setSelectedSeats(prevSeats => 
+      prevSeats.includes(seatIndex)
+        ? prevSeats.filter(seat => seat !== seatIndex)
+        : [...prevSeats, seatIndex]
+    );
   };
 
-  const handleMovieChange = (event) => {
+  const handleMovieChange = async (event) => {
     const movie = movies.find(m => m.Title === event.target.value);
     setSelectedMovie(movie);
+    setSelectedSeats([]); // Clear selected seats when movie changes
+    await fetchBookedSeats(movie.Title);
+  };
+
+  const handleBookingComplete = async () => {
+    await fetchBookedSeats(selectedMovie.Title);
+    setSelectedSeats([]);
+    setShowBookingForm(false);
   };
 
   if (isLoading) {
@@ -75,6 +92,7 @@ export const MovieBooking = () => {
 
       <SeatGrid 
         selectedSeats={selectedSeats}
+        bookedSeats={bookedSeats}
         onSeatClick={handleSeatClick}
       />
 
@@ -99,6 +117,7 @@ export const MovieBooking = () => {
           selectedSeats={selectedSeats}
           totalPrice={totalPrice}
           onClose={() => setShowBookingForm(false)}
+          onBookingComplete={handleBookingComplete}
         />
       )}
     </div>

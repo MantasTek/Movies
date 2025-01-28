@@ -1,60 +1,49 @@
 import PropTypes from 'prop-types';
 
-export const SeatGrid = ({ selectedSeats, onSeatClick }) => {
+export const SeatGrid = ({ selectedSeats, bookedSeats, onSeatClick }) => {
   const ROWS = 6;
   const SEATS_PER_ROW = 8;
   const occupiedSeats = [3, 4, 14, 15, 22, 23, 34, 35, 44, 45, 46];
 
   const renderSeat = (rowIndex, seatIndex) => {
-    const index = rowIndex * SEATS_PER_ROW + seatIndex +1;
-    console.log('index:', index);
-    const isOccupied = occupiedSeats.includes(index);
+    const index = (rowIndex * SEATS_PER_ROW) + seatIndex;
+    const isOccupied = occupiedSeats.includes(index) || bookedSeats.includes(index);
     const isSelected = selectedSeats.includes(index);
 
     return (
       <div
-        key={`seat-${index}`}
-        className={`seat${isSelected ? ' selected' : ''}${isOccupied ? ' occupied' : ''}`}
+        key={`seat-${rowIndex}-${seatIndex}`}
+        className={`seat ${isOccupied ? 'occupied' : ''} 
+          ${isSelected ? 'selected' : ''}`}
         onClick={() => !isOccupied && onSeatClick(index)}
-        role="button"
-        tabIndex={isOccupied ? -1 : 0}
-        aria-label={`Seat ${index + 1} ${isOccupied ? 'occupied' : isSelected ? 'selected' : 'available'}`}
       />
     );
   };
 
   return (
-    <div className="seat-grid">
+    <>
       <ul className="showcase">
-        <li>
-          <div className="seat" />
-          <small>N/A</small>
-        </li>
-        <li>
-          <div className="seat selected" />
-          <small>Selected</small>
-        </li>
-        <li>
-          <div className="seat occupied" />
-          <small>Occupied</small>
-        </li>
+        <li><div className="seat"></div><small>N/A</small></li>
+        <li><div className="seat selected"></div><small>Selected</small></li>
+        <li><div className="seat occupied"></div><small>Occupied</small></li>
       </ul>
 
       <div className="container">
-        <div className="screen" />
-        {Array(ROWS).fill(null).map((_, rowIndex) => (
-          <div key={`row-${rowIndex}`} className="row">
-            {Array(SEATS_PER_ROW).fill(null).map((_, seatIndex) => 
+        <div className="screen"></div>
+        {[...Array(ROWS)].map((_, rowIndex) => (
+          <div key={rowIndex} className="row">
+            {[...Array(SEATS_PER_ROW)].map((_, seatIndex) => 
               renderSeat(rowIndex, seatIndex)
             )}
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
 SeatGrid.propTypes = {
   selectedSeats: PropTypes.arrayOf(PropTypes.number).isRequired,
+  bookedSeats: PropTypes.arrayOf(PropTypes.number).isRequired,
   onSeatClick: PropTypes.func.isRequired
 };
